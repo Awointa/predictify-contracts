@@ -293,24 +293,6 @@ impl MarketIdGenerator {
         env.storage().persistent().set(&key, &counters);
     }
 
-    fn register_market_id(env: &Env, market_id: &Symbol, admin: &Address, timestamp: u64) {
-        let key = Symbol::new(env, Self::REGISTRY_KEY);
-        let mut registry: Vec<MarketIdRegistryEntry> = env
-            .storage()
-            .persistent()
-            .get(&key)
-            .unwrap_or(Vec::new(env));
-        registry.push_back(MarketIdRegistryEntry {
-            market_id: market_id.clone(),
-            admin: admin.clone(),
-            timestamp,
-        });
-        env.storage().persistent().set(&key, &registry);
-    }
-    }
-
-}
-
     /// Get market ID registry with pagination
     pub fn get_market_id_registry(env: &Env, start: u32, limit: u32) -> Vec<MarketIdRegistryEntry> {
         let registry_key = Symbol::new(env, Self::REGISTRY_KEY);
@@ -348,12 +330,6 @@ impl MarketIdGenerator {
 
         env.storage().persistent().set(&registry_key, &registry);
     }
-}
-}
-
-
-// ── Tests ─────────────────────────────────────────────────────────────────────
-
 }
 
 #[cfg(test)]

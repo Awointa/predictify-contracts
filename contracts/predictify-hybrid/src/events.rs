@@ -3003,8 +3003,6 @@ impl EventEmitter {
         admin: &Address,
         amount: i128,
         remaining_fees: i128,
-        nonce: Self::get_and_increment_nonce(env, symbol_short!("fwd_ok").clone()),
-
         timestamp: u64,
     ) {
         let event = FeeWithdrawnEvent {

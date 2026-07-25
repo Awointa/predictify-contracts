@@ -10,7 +10,7 @@ extern crate alloc;
 
 
 const SYM_ADMIN: &str = "Admin";
-const SYM_PLATFORM_FEE: &str = "platform_fee";
+const SYM_PLATFORM_FEE: &str = "plat_fee";
 pub use config::PERCENTAGE_DENOMINATOR;
 mod admin;
 // #[cfg(any())]
@@ -79,24 +79,6 @@ mod lists;
 // #[cfg(any())]
 // mod voting_invariants;
 
-// Modules whose declarations were dropped during the lib.rs collapse in
-// e5db2d8 but whose files and call sites were retained/re-added afterwards.
-// Restored here so the crate links again.
-mod disputes;
-mod edge_cases;
-mod extensions;
-mod graceful_degradation;
-mod leaderboard;
-mod market_analytics;
-mod market_id_generator;
-mod metadata_limits;
-mod performance_benchmarks;
-mod queries;
-mod rate_limiter;
-mod recovery;
-mod statistics;
-pub mod tokens;
-
 #[cfg(test)]
 mod override_audit_tests;
 #[cfg(test)]
@@ -110,8 +92,6 @@ mod bandprotocol {
     soroban_sdk::contractimport!(file = "./std_reference.wasm");
 }
 
-mod performance_benchmarks;
-mod market_analytics;
 pub mod timelock;
 
 // #[cfg(any())]
@@ -253,12 +233,8 @@ impl From<crate::rate_limiter::RateLimiterError> for Error {
     }
 }
 
-// Short symbol keys (max length 9 for Soroban compatibility). These consts were
-// dropped in the e5db2d8 lib.rs collapse but are still referenced by the storage
-// helpers below; restored here.
-const SYM_PLATFORM_FEE: &str = "plat_fee"; // was "platform_fee" (12 chars)
+// Short symbol keys (max length 9 for Soroban compatibility).
 const SYM_ALLOWED_ASSETS: &str = "allowed"; // was "allowed_assets" (14 chars)
-const SYM_ADMIN: &str = "Admin"; // 5 chars
 
 /// Basis-point denominator for percentage math (100% = 10000 bps).
 pub(crate) const PERCENTAGE_DENOMINATOR: i128 = 10000;
@@ -8466,20 +8442,6 @@ impl PredictifyHybrid {
 
 // ===== TESTS =====
 
-pub const PERCENTAGE_DENOMINATOR: i128 = 10000;
-pub const SYM_ADMIN: &str = "ADMIN";
-pub const ORACLE_FAILURE_PRIMARY_THEN_FALLBACK_REASON: &str = "OracleFailure";
-
-
-impl PredictifyHybrid {
-    pub fn require_primary_admin(env: &Env, admin: &Address) -> Result<(), crate::err::Error> { Ok(()) }
-    pub fn require_primary_admin_or_panic(env: &Env, admin: &Address) {}
-    pub fn require_admin_permission(env: &Env, admin: &Address, perm: crate::admin::AdminPermission) -> Result<(), crate::err::Error> { Ok(()) }
-    pub fn require_initialized_admin_root(env: &Env, admin: &Address) -> Result<(), crate::err::Error> { Ok(()) }
-}
-pub fn resolution_timeout_reached(env: &Env, market: &crate::types::Market) -> bool { false }
-pub fn get_oracle_result(env: &Env, config: &crate::types::OracleConfig) -> Result<soroban_sdk::String, crate::err::Error> { Ok(soroban_sdk::String::from_str(env, "yes")) }
-
 
 #[cfg(test)]
 
@@ -8743,5 +8705,3 @@ mod tests {
         crate::fees::FeeWithdrawalManager::get_schedule(&env)
     }
 }
-
-mod dispute_multisig;

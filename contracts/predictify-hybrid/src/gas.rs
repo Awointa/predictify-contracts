@@ -370,23 +370,24 @@ impl BudgetGuard {
     /// This is a lightweight call that reads a single value from the host.
     /// It should be called at regular intervals, not on every iteration.
     pub fn check(&self) -> Result<(), Error> {
-    let current = cpu_instruction_cost(&self.env);
-    let consumed = current.saturating_sub(self.start_instructions);
+        let current = cpu_instruction_cost(&self.env);
+        let consumed = current.saturating_sub(self.start_instructions);
 
-    if consumed >= self.threshold_remaining {
-        return Err(Error::OperationWouldExceedBudget);
+        if consumed >= self.threshold_remaining {
+            return Err(Error::OperationWouldExceedBudget);
+        }
+        Ok(())
     }
-    }
-    Ok(())
-}
 
     /// Get the current remaining budget consumed so far.
     ///
     /// # Returns
     /// The number of CPU instructions consumed since the guard was created.
     pub fn consumed(&self) -> u64 {
-        let current = cpu_instruction_cost(&self.env);
-        current.saturating_sub(self.start_instructions)
+        #[cfg(any(test, feature = "testutils"))]
+        {
+            let current = cpu_instruction_cost(&self.env);
+            current.saturating_sub(self.start_instructions)
         }
         #[cfg(not(any(test, feature = "testutils")))]
         { 0 }
